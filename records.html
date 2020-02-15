@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Todo List</title>
+	<link rel="stylesheet" type="text/css" href="Todos.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/a909b6ae01.js" crossorigin="anonymous"></script>
+  <meta charset="utf-8"/>
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+  <style type="text/css">
+  	h1{
+	background-color: #2980b9;
+	color: white;
+	margin: 0;
+	padding: 10px 20px;
+	text-transform: uppercase;
+	font-size: 24px;
+	font-weight: normal;
+}
+body{
+	background: #2BC0E4;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #EAECC6, #2BC0E4);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #EAECC6, #2BC0E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+.fa-pencil-alt{
+	float: right;
+}
+
+ul{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+body{
+	font-family: Roboto;
+}
+
+li{
+	background-color: #fff;
+	height: 40px;
+	line-height: 40px;
+	color: #666;
+
+}
+
+li:nth-child(2n){
+     background-color: #f7f7f7;
+}
+
+span{
+	background-color: #e74c3c;
+	height: 40px;
+	margin-right: 20px;
+	text-align: center;
+	color: white;
+	width: 0;
+	display: inline-block;
+	transition: 0.2s linear;
+	opacity: 0;
+}
+
+li:hover span{
+	width: 40px;
+	opacity: 1.0;
+}
+
+input{
+	font-size :18px;
+	color: #2980b9;
+	background-color: #f7f7f7;
+	width: 100%;
+	padding: 13px 13px 13px 20px;
+	box-sizing: border-box;
+	border:3px solid rgba(0,0,0,0);
+}
+
+input:focus{
+	background-color: #fff;
+	border:3px solid #2980b9;
+	outline: none;
+}
+
+#container{
+	width: 360px;
+	margin: 100px auto;
+	background: #f7f7f7;
+	box-sizing:  0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+.completed{
+	color:gray;
+	text-decoration: line-through;
+}
+  </style>
+</head>
+<body>
+<div id="container">
+	<h1>YOUR PRESCRIPTION RECORDS <i class="fas fa-pencil-alt"></i></h1>
+	<input type="text" id="Prescription" placeholder="Add New Prescription with dosage">
+
+	<ul>
+		<button onclick= "updateData()">Update Firebase</button>
+	</ul>
+</div>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-database.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyANuAhf2tGBlyfefk4smJiV7oSolTK90PU",
+    authDomain: "nursemd-87293.firebaseapp.com",
+    databaseURL: "https://nursemd-87293.firebaseio.com/",
+    projectId: "nursemd-87293",
+    storageBucket: "nursemd-87293.appspot.com",
+    messagingSenderId: "1061148931122",
+    appId: "1:1061148931122:web:c7ae08a65e2d67a917f82b",
+    measurementId: "G-6H2XZJ6QK6"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+  
+</script>
+<script type="text/javascript">$("ul").on("click", "li", function () {
+	// body...
+     $(this).toggleClass("completed");
+ });
+
+//delete button
+$("ul").on("click","span",function(){
+	$(this).parent().fadeOut(500,function(){
+		$(this).remove();
+	});
+     event.stopPropagation();
+});
+
+$("input[type = 'text']").keypress(function(k){
+	if(k.which === 13){
+		var todoText = $(this).val();
+		$(this).val("");
+		$("ul").append("<li><span><i class='fas fa-trash-alt'></i></span>" + todoText + "</li>");
+	}
+
+});
+
+$(".fa-pencil-alt").click(function(){
+ $("input[type='text']").fadeToggle();
+});
+var fb_db = firebase.database().ref();
+  function updateData(){
+  data = document.getElementById('Prescription').value;
+	fb_db.child("prescription/").push({
+		user_name : data });}
+</script>
+
+</body>
+</html>
